@@ -81,7 +81,7 @@ Week 7
 
 
 ## Wireframes
-<img src="https://i.imgur.com/lNQ4xRy.png" width=800><br>
+<img src="https://i.imgur.com/2jlUoP6.png" width=800><br>
 
 ### [BONUS] Digital Wireframes & Mockups
 <img src="" height=200>
