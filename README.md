@@ -88,3 +88,31 @@ Week 7
 
 ### [BONUS] Interactive Prototype
 <img src="" width=200>
+
+### Models
+#### Model: User
+| Property     | Type      | Description   |
+| :---         |    :----: |          ---: |
+| userID       | String    |               |
+| username     | String    |               |
+| password     | String    |               |
+| profileImage | ParseFile |               |
+| matches      | List<User>|               |
+| userIssues   | List<string>|               |
+
+#### Model: Post
+| Property   | Type   | Description   |
+| :---       | :----: |          ---: |
+| description| String |               |
+| postImage  | ParseFile|             |
+| user       | User   |               |
+| createdAt  | Date   |               |
+
+#### Model: Location
+| Property    | Type             | Description   |
+| :---        |    :----:        |          ---: |
+| userLatitude  | String           |               |
+| userLongitude        | String  |               |
+| user       | User |               |
+
+
