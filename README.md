@@ -68,26 +68,24 @@ Week 4
 * Logout from app
 * User can make a post
 * User can view posts by their matches
+* Implement a bottom navigation
 
 Week 5
 
-* Users can see other users profiles and match
+* Users can see other users profiles based on location and common issues
 
 Week 6
 
+* Users can see other users profiles and match 
+* Implement stretch stories
 
 Week 7
-
+* Implement stretch stories
+* Brush up the app design for required stories
 
 
 ## Wireframes
-<img src="https://i.imgur.com/2jlUoP6.png" width=800><br>
-
-### [BONUS] Digital Wireframes & Mockups
-<img src="" height=200>
-
-### [BONUS] Interactive Prototype
-<img src="" width=200>
+<img src="https://i.imgur.com/T3sBeD3.png" width=800><br>
 
 ### Models
 #### Model: User
