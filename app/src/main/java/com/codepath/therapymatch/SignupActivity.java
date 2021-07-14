@@ -55,6 +55,7 @@ public class SignupActivity extends AppCompatActivity {
                     viewOtherUserPosts();
                     Toast.makeText(SignupActivity.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "Signup Success");
+                    return;
                 }
                 Log.e(TAG, "Issue with signup: "+ e);
                 return;
