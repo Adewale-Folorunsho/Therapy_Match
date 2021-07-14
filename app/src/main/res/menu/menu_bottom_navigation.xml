@@ -7,11 +7,11 @@
         android:icon="@drawable/ic_baseline_person_24"
         app:showAsAction="always" />
     <item
-        android:id="@+id/actionOtherUserProfile"
+        android:id="@+id/actionPosts"
         android:icon="@drawable/ic_baseline_rss_feed_24"
         app:showAsAction="always" />
     <item
-        android:id="@+id/actionPosts"
+        android:id="@+id/actionOtherUserProfile"
         android:icon="@drawable/ic_baseline_person_add_alt_1_24"
         app:showAsAction="always" />
 </menu>
