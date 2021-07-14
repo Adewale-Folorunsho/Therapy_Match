@@ -15,6 +15,7 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "User opened app");
 
         if(ParseUser.getCurrentUser() != null){
             Intent intent = new Intent(LaunchActivity.this, PostsActivity.class);
