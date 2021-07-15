@@ -6,10 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".fragments.CurrentUserProfileFragment">
 
-    <TextView
-        android:id="@+id/textView2"
+    <Button
+        android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Current User Profile" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginRight="3dp"
+        android:text="Logout" />
 </RelativeLayout>

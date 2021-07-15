@@ -23,6 +23,7 @@
         <activity android:name=".LoginActivity"/>
         <activity android:name=".PostsActivity"/>
         <activity android:name=".SignupActivity"/>
+        <activity android:name=".MakePostActivity"/>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +15,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.codepath.therapymatch.LaunchActivity;
+import com.codepath.therapymatch.MakePostActivity;
 import com.codepath.therapymatch.PostsActivity;
 import com.codepath.therapymatch.R;
 import com.parse.ParseUser;
 
 public class PostFragment extends Fragment {
-    Button btnLogout;
     private String TAG = "PostFragment";
+
+    Button btnMakePost;
 
     public PostFragment() {
         // Required empty public constructor
@@ -36,25 +39,17 @@ public class PostFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnLogout = view.findViewById(R.id.btnLogout);
 
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        btnMakePost = view.findViewById(R.id.btnMakePost);
+        btnMakePost.setOnClickListener(new View.OnClickListener() {
+            Fragment fragment;
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "User tried to logout");
-                logout();
+                Log.i(TAG, "Make Post clicked");
+                Intent intent = new Intent(getActivity(), MakePostActivity.class);
+                startActivity(intent);
             }
         });
 
-    }
-
-    private void logout() {
-        getActivity().finish();
-        ParseUser.logOut();
-
-        Intent intent = new Intent(getContext(), LaunchActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 }
