@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,12 +14,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.codepath.therapymatch.MakePostActivity;
+import com.codepath.therapymatch.PostsAdapter;
 import com.codepath.therapymatch.R;
+import com.codepath.therapymatch.models.Post;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PostFragment extends Fragment {
     private String TAG = "PostFragment";
+    private int MAX_ITEMS = 20;
+    public List<Post> posts;
+    protected PostsAdapter postsAdapter;
+
+
 
     Button btnMakePost;
+    RecyclerView rvPosts;
 
     public PostFragment() {
         // Required empty public constructor
@@ -26,7 +42,6 @@ public class PostFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_post, container, false);
     }
 
@@ -34,7 +49,16 @@ public class PostFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        posts = new ArrayList<>();
+
+        postsAdapter = new PostsAdapter(getContext(), posts);
+        rvPosts = view.findViewById(R.id.rvPosts);
         btnMakePost = view.findViewById(R.id.btnMakePost);
+
+        rvPosts.setAdapter(postsAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        rvPosts.setLayoutManager(linearLayoutManager);
+
         btnMakePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,5 +68,30 @@ public class PostFragment extends Fragment {
             }
         });
 
+        queryPosts();
+    }
+
+    private void queryPosts(){
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_USER);
+        query.include(Post.KEY_TIME);
+        query.setLimit(MAX_ITEMS);
+        query.orderByDescending("createdAt");
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> postsFromDB, ParseException e) {
+                if(e != null){
+                    Log.e(TAG, "Error getting posts");
+                    return;
+                }
+
+                for(Post post : postsFromDB){
+                    Log.i(TAG, "Username: " + post.getUser().getUsername() + " Description: " + post.getDescription() + " Time: " + post.getTime());
+                }
+
+                posts.addAll(postsFromDB);
+                postsAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
