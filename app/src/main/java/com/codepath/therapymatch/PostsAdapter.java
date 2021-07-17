@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.codepath.therapymatch.models.Post;
 import com.parse.ParseFile;
 
@@ -69,7 +70,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             tvCreatedAt.setText(post.getTime());
 
             ParseFile profilePicture = post.getUser().getParseFile("profileImage");
-            Glide.with(context).load(profilePicture.getUrl()).into(ivUserProfileImage);
+            Glide.with(context).load(profilePicture.getUrl()).apply(RequestOptions.circleCropTransform()).into(ivUserProfileImage);
 
             ParseFile postImage = post.getImage();
             if (postImage != null) {

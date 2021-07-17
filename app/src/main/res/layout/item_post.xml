@@ -14,7 +14,9 @@
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/ivUserProfileImage"
         android:text="Username"
-        android:shape = "ring"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -48,7 +50,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="10dp"
         android:text="Description"
-        android:textSize="24sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/tvCreatedAt"

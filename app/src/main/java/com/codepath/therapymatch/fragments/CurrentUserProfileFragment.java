@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.codepath.therapymatch.LaunchActivity;
 import com.codepath.therapymatch.R;
 import com.parse.ParseFile;
@@ -52,6 +53,7 @@ public class CurrentUserProfileFragment extends Fragment {
         ParseFile profilePicture = user.getParseFile("profileImage");
         Glide.with(CurrentUserProfileFragment.this)
                 .load(profilePicture.getUrl())
+                .apply(RequestOptions.circleCropTransform())
                 .placeholder(R.drawable.ic_baseline_cloud_download_24)
                 .into(ivProfilePicture);
 
