@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -20,11 +19,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.codepath.therapymatch.R;
+import com.codepath.therapymatch.fragments.PostFragment;
 import com.codepath.therapymatch.models.Post;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.parceler.Parcels;
 
 import java.io.File;
 
@@ -32,6 +34,7 @@ public class MakePostActivity extends AppCompatActivity {
     private final static String TAG = "MakePostActivity";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     public String photoFileName = "photo.jpg";
+    public Post post;
 
     private File photoFile;
     EditText etDescription;
@@ -41,7 +44,7 @@ public class MakePostActivity extends AppCompatActivity {
     Button btnCancel;
 
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_post_activity);
 
@@ -54,6 +57,7 @@ public class MakePostActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "reached");
                 Intent intent = new Intent(MakePostActivity.this, PostsActivity.class);
                 startActivity(intent);
             }
@@ -65,13 +69,12 @@ public class MakePostActivity extends AppCompatActivity {
                 String description = etDescription.getText().toString();
                 if(description.isEmpty()){
                     Toast.makeText(MakePostActivity.this, "The description cannot be empty", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "Description was emopty");
+                    Log.i(TAG, "Description was empty");
                     return;
                 }
 
                 ParseUser user = ParseUser.getCurrentUser();
                 savePost(user, description, photoFile);
-                // queryPosts();
             }
         });
 
@@ -155,6 +158,5 @@ public class MakePostActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MakePostActivity.this, PostsActivity.class);
         startActivity(intent);
-        finish();
     }
 }

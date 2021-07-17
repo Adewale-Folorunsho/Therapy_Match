@@ -12,14 +12,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.therapymatch.LaunchActivity;
 import com.codepath.therapymatch.R;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 public class CurrentUserProfileFragment extends Fragment {
     private String TAG = "CurrentUserProfileFragment";
+
+    TextView tvProfileUsername;
+    ImageView ivProfilePicture;
     Button btnLogout;
+
+    ParseUser user = ParseUser.getCurrentUser();
 
     public CurrentUserProfileFragment() {
         // Required empty public constructor
@@ -28,13 +37,23 @@ public class CurrentUserProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_current_user_profile, container, false);
     }
 
     @Override
     public void onViewCreated( View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        tvProfileUsername = view.findViewById(R.id.tvProfileUsername);
+        ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
+
+        tvProfileUsername.setText(user.getUsername());
+
+        ParseFile profilePicture = user.getParseFile("profileImage");
+        Glide.with(CurrentUserProfileFragment.this)
+                .load(profilePicture.getUrl())
+                .placeholder(R.drawable.ic_baseline_cloud_download_24)
+                .into(ivProfilePicture);
 
         btnLogout = view.findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {

@@ -13,6 +13,7 @@ public class ParseApplication extends Application {
         super.onCreate();
 
         ParseObject.registerSubclass(Post.class);
+        Parse.enableLocalDatastore(this);
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId("oE8gqwHTfCR7mSA2OQpUJvsTZqZGO02s0XTysVJl")
                 .clientKey("BzXhxFJYTCBxvMJMt4jn6wofgEk82uivoW2YVELc")
