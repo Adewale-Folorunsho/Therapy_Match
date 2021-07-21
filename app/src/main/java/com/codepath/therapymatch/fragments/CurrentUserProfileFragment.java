@@ -3,8 +3,6 @@ package com.codepath.therapymatch.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -45,7 +43,7 @@ public class CurrentUserProfileFragment extends Fragment {
     public void onViewCreated( View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvProfileUsername = view.findViewById(R.id.tvProfileUsername);
+        tvProfileUsername = view.findViewById(R.id.tvNUProfileUsername);
         ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
 
         tvProfileUsername.setText(user.getUsername());

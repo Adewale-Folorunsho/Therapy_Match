@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ViewOtherUserSwipeFragment">
+
+
+    <ImageView
+        android:id="@+id/ivNUserProfilePicture"
+        android:layout_width="306dp"
+        android:layout_height="248dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="0dp"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvNUProfileUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivNUserProfilePicture"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:text="Name" />
+
+    <TextView
+        android:id="@+id/tvBio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvNUProfileUsername"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="false"
+        android:layout_marginStart="65dp"
+        android:layout_marginTop="15dp"
+        tools:text="This is a bio" />
+
+    <TextView
+        android:id="@+id/tvIssues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBio"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="false"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="10dp"
+        tools:text="this, that, that, this" />
+</RelativeLayout>

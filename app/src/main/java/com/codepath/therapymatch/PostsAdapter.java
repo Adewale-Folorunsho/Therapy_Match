@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -74,6 +73,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
             ParseFile postImage = post.getImage();
             if (postImage != null) {
+                ivPostImage.setVisibility(View.VISIBLE);
                 Glide.with(context).load(postImage.getUrl()).placeholder(R.drawable.ic_baseline_cloud_download_24).into(ivPostImage);
             }
             else {

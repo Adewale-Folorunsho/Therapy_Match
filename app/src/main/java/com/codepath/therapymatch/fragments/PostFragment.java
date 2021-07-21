@@ -2,30 +2,23 @@ package com.codepath.therapymatch.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import com.codepath.therapymatch.MakePostActivity;
 import com.codepath.therapymatch.PostsAdapter;
 import com.codepath.therapymatch.R;
 import com.codepath.therapymatch.models.Post;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +27,7 @@ public class PostFragment extends Fragment {
     private String TAG = "PostFragment";
     private int MAX_ITEMS = 20;
     private final int REQUEST_CODE = 20;
-
     public List<Post> posts;
-
     protected PostsAdapter postsAdapter;
     private SwipeRefreshLayout swipeContainer;
     Button btnMakePost;
@@ -70,6 +61,7 @@ public class PostFragment extends Fragment {
                 Log.i(TAG, "Make Post clicked");
                 Intent intent = new Intent(getContext(), MakePostActivity.class);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
 
@@ -100,7 +92,6 @@ public class PostFragment extends Fragment {
         query.include(Post.KEY_USER);
         query.include(Post.KEY_TIME);
         query.setLimit(posts.size() - 1);
-        posts.clear();
         query.orderByDescending("createdAt");
         query.findInBackground(new FindCallback<Post>() {
             @Override

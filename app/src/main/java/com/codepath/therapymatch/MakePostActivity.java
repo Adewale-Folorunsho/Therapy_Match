@@ -69,10 +69,8 @@ public class MakePostActivity extends AppCompatActivity {
                 String description = etDescription.getText().toString();
                 if(description.isEmpty()){
                     Toast.makeText(MakePostActivity.this, "The description cannot be empty", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "Description was empty");
                     return;
                 }
-
                 ParseUser user = ParseUser.getCurrentUser();
                 savePost(user, description, photoFile);
             }
@@ -142,9 +140,8 @@ public class MakePostActivity extends AppCompatActivity {
     private void savePost(ParseUser user, String description, File photoFile) {
         Post userPost = new Post();
         userPost.setDescription(description);
-        userPost.setImage(new ParseFile(photoFile));
+        if(photoFile != null) userPost.setImage(new ParseFile(photoFile));
         userPost.setUser(user);
-
         userPost.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -153,10 +150,10 @@ public class MakePostActivity extends AppCompatActivity {
                     return;
                 }
                 Log.i(TAG, "Post was successful");
+                Intent intent = new Intent(MakePostActivity.this, PostsActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
-
-        Intent intent = new Intent(MakePostActivity.this, PostsActivity.class);
-        startActivity(intent);
     }
 }
