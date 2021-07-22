@@ -51,7 +51,7 @@ public class ViewOtherUserProfilesFragment extends Fragment {
         fragmentAdapter = new FragmentAdapter(getActivity().getSupportFragmentManager() , users, getContext());
 
         viewPager.setAdapter(fragmentAdapter);
-        viewPager.setPageTransformer(true, new DepthTransformation());
+        viewPager.setPageTransformer(true, new RotateUpPageTransforme());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             float tempPositionOffset = 0;
             @Override
@@ -112,35 +112,18 @@ public class ViewOtherUserProfilesFragment extends Fragment {
     }
 
 
-    public class DepthTransformation implements ViewPager.PageTransformer{
+    public class RotateUpPageTransforme implements ViewPager.PageTransformer{
+        private static final float ROTATION = -15f;
+
         @Override
-        public void transformPage(View page, float position) {
+        public void transformPage( View page, float pos ) {
+            final float width = page.getWidth();
+            final float height = page.getHeight();
+            final float rotation = ROTATION * pos * -1.25f;
 
-            if (position < -1){    // [-Infinity,-1)
-                // This page is way off-screen to the left.
-                page.setAlpha(0);
-
-            }
-            else if (position <= 0){    // [-1,0]
-                page.setAlpha(1);
-                page.setTranslationX(0);
-                page.setScaleX(1);
-                page.setScaleY(1);
-
-            }
-            else if (position <= 1){    // (0,1]
-                page.setTranslationX(-position*page.getWidth());
-                page.setAlpha(1-Math.abs(position));
-                page.setScaleX(1-Math.abs(position));
-                page.setScaleY(1-Math.abs(position));
-
-            }
-            else {    // (1,+Infinity]
-                // This page is way off-screen to the right.
-                page.setAlpha(0);
-
-            }
-
+            page.setPivotX( width * 0.5f );
+            page.setPivotY( height );
+            page.setRotation( rotation );
 
         }
     }
