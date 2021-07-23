@@ -12,17 +12,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.therapymatch.R;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 public class ViewOtherUserSwipeFragment extends Fragment {
 
     TextView tvUsername;
-    ImageView profilePicture;
+    TextView tvBio;
+    ImageView ivNUserProfilePicture;
 
-    public ViewOtherUserSwipeFragment() {
-        // Required empty public constructor
-    }
-
-
+    public ViewOtherUserSwipeFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,13 +35,21 @@ public class ViewOtherUserSwipeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_other_user_swipe, container, false);
 
         tvUsername = view.findViewById(R.id.tvNUProfileUsername);
-        profilePicture = view.findViewById(R.id.ivNUserProfilePicture);
+        tvBio = view.findViewById(R.id.tvBioHeader);
+        ivNUserProfilePicture = view.findViewById(R.id.ivNUserProfilePicture);
 
-        String message = getArguments().getString("Message");
-        String profilePictureUrl = getArguments().getString("Image");
+        ParseUser user = getArguments().getParcelable("User");
+        String username = user.getUsername();
+        if(!(user.get("bio") == null)){
+            String bio = user.get("bio").toString();
+            tvBio.setText(bio);
+        }
+        ParseFile profilePicture = user.getParseFile("profileImage");
+        String profilePictureUrl = profilePicture.getUrl();
 
-        Glide.with(getContext()).load(profilePictureUrl).placeholder(R.drawable.ic_baseline_cloud_download_24).into(profilePicture);
-        tvUsername.setText(message);
+        Glide.with(getContext()).load(profilePictureUrl).placeholder(R.drawable.ic_baseline_cloud_download_24).into(ivNUserProfilePicture);
+        tvUsername.setText(username);
+
 
         return view;
     }

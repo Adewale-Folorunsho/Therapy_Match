@@ -1,12 +1,8 @@
 package com.codepath.therapymatch;
 
-import android.content.Intent;
-import android.graphics.ComposePathEffect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +14,6 @@ import com.codepath.therapymatch.fragments.CurrentUserProfileFragment;
 import com.codepath.therapymatch.fragments.PostFragment;
 import com.codepath.therapymatch.fragments.ViewOtherUserProfilesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.ParseUser;
 
 public class PostsActivity extends AppCompatActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -46,7 +41,7 @@ public class PostsActivity extends AppCompatActivity {
                     case R.id.actionUserProfile:
                         Log.i(TAG, "actionUserProfile Clicked");
                         Toast.makeText(PostsActivity.this, "User Profile", Toast.LENGTH_SHORT).show();
-                        fragment = new CurrentUserProfileFragment();
+                        fragment = new CurrentUserProfileFragment(fragmentManager);
                         break;
                     case R.id.actionPosts:
                     default:

@@ -2,6 +2,7 @@ package com.codepath.therapymatch;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -28,10 +29,12 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         ViewOtherUserSwipeFragment fragment = new ViewOtherUserSwipeFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("Message", users.get(position).getUsername());
-        ParseFile profilePicture = users.get(position).getParseFile("profileImage");
-        String imageUrl = profilePicture.getUrl();
-        bundle.putString("Image", imageUrl);
+        bundle.putParcelable("User", (Parcelable) users.get(position));
+
+//        bundle.putString("Message", users.get(position).getUsername());
+//        ParseFile profilePicture = users.get(position).getParseFile("profileImage");
+//        String imageUrl = profilePicture.getUrl();
+//        bundle.putString("Image", imageUrl);
         fragment.setArguments(bundle);
         return fragment;
     }
