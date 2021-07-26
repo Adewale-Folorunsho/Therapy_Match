@@ -27,14 +27,9 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        ViewOtherUserSwipeFragment fragment = new ViewOtherUserSwipeFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("User", (Parcelable) users.get(position));
-
-//        bundle.putString("Message", users.get(position).getUsername());
-//        ParseFile profilePicture = users.get(position).getParseFile("profileImage");
-//        String imageUrl = profilePicture.getUrl();
-//        bundle.putString("Image", imageUrl);
+        ViewOtherUserSwipeFragment fragment = new ViewOtherUserSwipeFragment();
         fragment.setArguments(bundle);
         return fragment;
     }

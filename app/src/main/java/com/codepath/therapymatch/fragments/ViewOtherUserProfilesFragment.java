@@ -18,6 +18,7 @@ import com.codepath.therapymatch.FragmentAdapter;
 import com.codepath.therapymatch.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -78,14 +79,14 @@ public class ViewOtherUserProfilesFragment extends Fragment {
 
 
     private void queryUsers(){
-        final String KEY_USERNAME = "username";
-        final String KEY_MATCHES = "matches";
-        final String KEY_IMAGE = "profileImage";
-        final String KEY_LIKES = "likes";
-        final String KEY_ISSUES = "issues";
-        final String KEY_BIO = "bio";
-        final String KEY_TIME = "createdAt";
-        final String KEY_EMAIL = "email";
+//        final String KEY_USERNAME = "username";
+//        final String KEY_MATCHES = "matches";
+//        final String KEY_IMAGE = "profileImage";
+//        final String KEY_LIKES = "likes";
+//        final String KEY_ISSUES = "issues";
+//        final String KEY_BIO = "bio";
+//        final String KEY_TIME = "createdAt";
+//        final String KEY_EMAIL = "email";
 
 
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
@@ -100,15 +101,20 @@ public class ViewOtherUserProfilesFragment extends Fragment {
                 }
 
 //                test
-//                for(ParseUser user : usersFromDB){
-//                    Log.i(TAG, "Username: " + user.getUsername());
-//                }
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                ParseGeoPoint currentUserLocation = (ParseGeoPoint) currentUser.get("location");
+                ParseGeoPoint userLocation;
+                for(ParseUser user : usersFromDB){
+                    userLocation = (ParseGeoPoint) user.get("location");
+                    if(currentUserLocation.distanceInMilesTo(userLocation) <= 10){
+                        users.add(user);
+                    }
+                }
 
-                users.addAll(usersFromDB);
+                //users.addAll(usersFromDB);
                 fragmentAdapter.notifyDataSetChanged();
             }
         });
-//        viewPager.setPadding(100,0,100,0);
     }
 
 

@@ -9,13 +9,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.codepath.therapymatch.fragments.EditUserProfileFragment;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 public class SignupActivity extends AppCompatActivity {
-
     public final static String TAG = "SignupActivity";
 
     EditText etUsername;
