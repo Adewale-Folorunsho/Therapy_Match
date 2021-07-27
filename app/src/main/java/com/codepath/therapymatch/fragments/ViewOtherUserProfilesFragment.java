@@ -1,19 +1,15 @@
 package com.codepath.therapymatch.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.codepath.therapymatch.FragmentAdapter;
 import com.codepath.therapymatch.R;
 import com.parse.FindCallback;
@@ -21,7 +17,6 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,14 +47,18 @@ public class ViewOtherUserProfilesFragment extends Fragment {
         fragmentAdapter = new FragmentAdapter(getActivity().getSupportFragmentManager() , users, getContext());
 
         viewPager.setAdapter(fragmentAdapter);
-        viewPager.setPageTransformer(true, new RotateUpPageTransforme());
+        viewPager.setPageTransformer(true, new RotateUpPageTransformer());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             float tempPositionOffset = 0;
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position == 0) {
-                    if (tempPositionOffset < positionOffset) Toast.makeText(getContext(), "Scrolling left", Toast.LENGTH_SHORT).show();
-                    if (tempPositionOffset > positionOffset) Toast.makeText(getContext(), "Scrolling right", Toast.LENGTH_SHORT).show();
+                    if (tempPositionOffset < positionOffset){
+                        //Toast.makeText(getContext(), "Scrolling left", Toast.LENGTH_SHORT).show();
+                    }
+                    if (tempPositionOffset > positionOffset){
+                        Toast.makeText(getContext(), "Scrolling right", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -79,17 +78,10 @@ public class ViewOtherUserProfilesFragment extends Fragment {
 
 
     private void queryUsers(){
-//        final String KEY_USERNAME = "username";
-//        final String KEY_MATCHES = "matches";
-//        final String KEY_IMAGE = "profileImage";
-//        final String KEY_LIKES = "likes";
-//        final String KEY_ISSUES = "issues";
-//        final String KEY_BIO = "bio";
-//        final String KEY_TIME = "createdAt";
-//        final String KEY_EMAIL = "email";
-
-
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        ParseGeoPoint currentUserLocation = (ParseGeoPoint) currentUser.get("location");
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.whereWithinMiles("location", currentUserLocation, 10);
         query.setLimit(MAX_ITEMS);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
@@ -99,26 +91,14 @@ public class ViewOtherUserProfilesFragment extends Fragment {
                     Log.e(TAG, "Error getting posts");
                     return;
                 }
-
-//                test
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                ParseGeoPoint currentUserLocation = (ParseGeoPoint) currentUser.get("location");
-                ParseGeoPoint userLocation;
-                for(ParseUser user : usersFromDB){
-                    userLocation = (ParseGeoPoint) user.get("location");
-                    if(currentUserLocation.distanceInMilesTo(userLocation) <= 10){
-                        users.add(user);
-                    }
-                }
-
-                //users.addAll(usersFromDB);
+                users.addAll(usersFromDB);
                 fragmentAdapter.notifyDataSetChanged();
             }
         });
     }
 
 
-    public class RotateUpPageTransforme implements ViewPager.PageTransformer{
+    public class RotateUpPageTransformer implements ViewPager.PageTransformer{
         private static final float ROTATION = -15f;
 
         @Override

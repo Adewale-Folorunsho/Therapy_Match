@@ -3,16 +3,12 @@ package com.codepath.therapymatch;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
 import com.codepath.therapymatch.fragments.ViewOtherUserSwipeFragment;
-import com.parse.ParseFile;
 import com.parse.ParseUser;
-
 import java.util.List;
 
 public class FragmentAdapter extends FragmentStatePagerAdapter {

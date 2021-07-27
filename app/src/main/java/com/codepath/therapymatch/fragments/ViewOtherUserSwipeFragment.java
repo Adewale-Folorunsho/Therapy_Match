@@ -13,12 +13,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.therapymatch.R;
+import com.codepath.therapymatch.models.Likes;
+import com.codepath.therapymatch.models.Matches;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
 public class ViewOtherUserSwipeFragment extends Fragment {
-
+    ParseUser currentUser = ParseUser.getCurrentUser();
     TextView tvUsername;
     TextView tvBio;
     ImageView ivNUserProfilePicture;
@@ -61,9 +63,44 @@ public class ViewOtherUserSwipeFragment extends Fragment {
         }else{
             distance = distanceBetweenUsers(user);
             tvDistance.setText(distance.toString() + " miles");
+        }
 
+        ParseUser likedUser = getArguments().getParcelable("like");
+        if(likedUser != null){
+            if(checkOtherUserLikes(likedUser)){
+                matchBothUsers(likedUser);
+            }else{
+                addToLikes(likedUser);
+            }
         }
         return view;
+    }
+
+    private void addToLikes(ParseUser likedUser) {
+        Likes currentUserLikes = (Likes) currentUser.get("likes");
+        if (currentUserLikes == null) currentUserLikes = new Likes();
+        currentUserLikes.addLikes(likedUser);
+        currentUser.put("likes", currentUserLikes);
+    }
+
+    private void matchBothUsers(ParseUser likedUser) {
+        Matches otherUserMatches = (Matches) likedUser.get("matches");
+        Matches currentUserMatches = (Matches) currentUser.get("matches");
+        if(otherUserMatches == null) otherUserMatches = new Matches();
+        if (currentUserMatches == null) currentUserMatches = new Matches();
+
+        otherUserMatches.addMatches(currentUser);
+        likedUser.put("matches", otherUserMatches);
+
+        currentUserMatches.addMatches(likedUser);
+        currentUser.put("matches", currentUserMatches);
+    }
+
+    private boolean checkOtherUserLikes(ParseUser likedUser) {
+        Likes otherUserLikes = (Likes) likedUser.get("likes");
+        if(otherUserLikes == null) return false;
+        if(otherUserLikes.containsKey(currentUser)) return true;
+        return false;
     }
 
     private Integer distanceBetweenUsers(ParseUser user) {

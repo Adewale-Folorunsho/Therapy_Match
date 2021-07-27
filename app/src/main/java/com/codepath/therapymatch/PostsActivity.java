@@ -34,19 +34,13 @@ public class PostsActivity extends AppCompatActivity {
                 Fragment fragment;
                 switch (menuItem.getItemId()) {
                     case R.id.actionOtherUserProfile:
-                        Log.i(TAG, "actionOtherUserProfile Clicked");
-                        Toast.makeText(PostsActivity.this, "actionOtherUserProfile", Toast.LENGTH_SHORT).show();
                         fragment = new ViewOtherUserProfilesFragment();
                         break;
                     case R.id.actionUserProfile:
-                        Log.i(TAG, "actionUserProfile Clicked");
-                        Toast.makeText(PostsActivity.this, "User Profile", Toast.LENGTH_SHORT).show();
                         fragment = new CurrentUserProfileFragment(fragmentManager);
                         break;
                     case R.id.actionPosts:
                     default:
-                        Log.i(TAG, "actionPosts Clicked");
-                        Toast.makeText(PostsActivity.this, "actionPosts", Toast.LENGTH_SHORT).show();
                         fragment = new PostFragment();
                         break;
                 }
