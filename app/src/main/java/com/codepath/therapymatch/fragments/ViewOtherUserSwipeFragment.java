@@ -19,6 +19,8 @@ import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
+
 public class ViewOtherUserSwipeFragment extends Fragment {
     ParseUser currentUser = ParseUser.getCurrentUser();
     TextView tvUsername;
@@ -66,20 +68,14 @@ public class ViewOtherUserSwipeFragment extends Fragment {
         }
 
         ParseUser likedUser = getArguments().getParcelable("like");
-        if(likedUser != null){
-            if(checkOtherUserLikes(likedUser)){
-                matchBothUsers(likedUser);
-            }else{
-                addToLikes(likedUser);
-            }
-        }
+        addToLikes(likedUser);
         return view;
     }
 
     private void addToLikes(ParseUser likedUser) {
-        Likes currentUserLikes = (Likes) currentUser.get("likes");
-        if (currentUserLikes == null) currentUserLikes = new Likes();
-        currentUserLikes.addLikes(likedUser);
+        ArrayList<ParseUser> currentUserLikes = (ArrayList<ParseUser>) currentUser.get("likes");
+        if (currentUserLikes == null) currentUserLikes = new ArrayList<>();
+        currentUserLikes.add(likedUser);
         currentUser.put("likes", currentUserLikes);
     }
 

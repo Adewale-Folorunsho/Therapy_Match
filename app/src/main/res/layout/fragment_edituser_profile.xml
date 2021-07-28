@@ -51,8 +51,9 @@
         android:layout_alignParentBottom="false"
         android:layout_marginTop="10dp"
         android:background="#F6F6F6"
-        android:textColor="@color/black"
         android:hint="Type your username"
+        android:textColor="@color/black"
+        android:textColorHint="#6A6A6A"
         android:textSize="14sp" />
 
     <TextView
@@ -78,8 +79,9 @@
         android:layout_alignParentBottom="false"
         android:layout_marginTop="10dp"
         android:background="#F6F6F6"
-        android:textColor="@color/black"
         android:hint="Type your bio"
+        android:textColor="@color/black"
+        android:textColorHint="#6A6A6A"
         android:textSize="14sp" />
 
     <TextView
@@ -107,6 +109,7 @@
         android:background="#F6F6F6"
         android:hint="Type your address"
         android:textColor="@color/black"
+        android:textColorHint="#6A6A6A"
         android:textSize="14sp" />
 
     <TextView
@@ -132,8 +135,9 @@
         android:layout_alignParentBottom="false"
         android:layout_marginTop="10dp"
         android:background="#F6F6F6"
-        android:hint="Something here"
+        android:hint="Add an issue"
         android:textColor="@color/black"
+        android:textColorHint="#474545"
         android:textSize="14sp" />
 
     <Button
@@ -147,6 +151,19 @@
         android:backgroundTint="#FFFFFF"
         android:textColor="@color/black"
         android:text="Save" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddIssue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvCUIssues"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="55dp"
+        android:clickable="true"
+        android:src="@android:drawable/ic_input_add" />
 
 </RelativeLayout>
 

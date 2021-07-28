@@ -25,15 +25,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.therapymatch.R;
+import com.codepath.therapymatch.models.Issues;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -52,11 +55,13 @@ public class EditUserProfileFragment extends Fragment {
     EditText etUsernameChange;
     EditText etBioChange;
     EditText etAddressChange;
+    EditText etIssuesChange;
     ImageView ivCUProfilePicture;
     ImageView ivPreview;
     Button btnSave;
     ParseGeoPoint latLong;
     FloatingActionButton fabCUEditProfile;
+    FloatingActionButton fabAddIssue;
     View view;
     ParseFile ImageFile;
     Fragment fragment;
@@ -85,9 +90,11 @@ public class EditUserProfileFragment extends Fragment {
         etBioChange = view.findViewById(R.id.etBioChange);
         etUsernameChange = view.findViewById(R.id.etUsernameChange);
         etAddressChange = view.findViewById(R.id.etAddressChange);
+        etIssuesChange = view.findViewById(R.id.etIssuesChange);
         ivCUProfilePicture = view.findViewById(R.id.ivCUProfilePicture);
         btnSave = view.findViewById(R.id.btnSave);
         fabCUEditProfile = view.findViewById(R.id.fabCUEditProfile);
+        fabAddIssue = view.findViewById(R.id.fabAddIssue);
 
         getUserInitialData();
 
@@ -100,6 +107,13 @@ public class EditUserProfileFragment extends Fragment {
             }
         });
 
+        fabAddIssue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addIssue();
+            }
+        });
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +122,23 @@ public class EditUserProfileFragment extends Fragment {
                 strAddress = etAddressChange.getText().toString();
                 geocodeAddress(strAddress);
                 updateUser(bio, username,photoFile);
+            }
+        });
+    }
+
+    private void addIssue() {
+        String strIssues = etIssuesChange.getText().toString();
+        ArrayList<String> issues = new ArrayList<>();
+
+        if(currentUser.get("issues") != null) issues = (ArrayList<String>) currentUser.get("issues");
+
+        issues.add(strIssues);
+        currentUser.put("issues", issues);
+        currentUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                etIssuesChange.setText("");
+                Toast.makeText(getContext(), "Issue Added", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -207,5 +238,6 @@ public class EditUserProfileFragment extends Fragment {
             }
         }
     }
+
 
 }

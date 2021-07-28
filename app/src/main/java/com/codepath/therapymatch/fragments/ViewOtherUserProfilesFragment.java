@@ -50,6 +50,7 @@ public class ViewOtherUserProfilesFragment extends Fragment {
         viewPager.setPageTransformer(true, new RotateUpPageTransformer());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             float tempPositionOffset = 0;
+            int check = 0;
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position == 0) {
@@ -58,8 +59,13 @@ public class ViewOtherUserProfilesFragment extends Fragment {
                     }
                     if (tempPositionOffset > positionOffset){
                         Toast.makeText(getContext(), "Scrolling right", Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("like", (Parcelable) users.get(check));
+                        ViewOtherUserSwipeFragment fragment = new ViewOtherUserSwipeFragment();
+                        fragment.setArguments(bundle);
                     }
                 }
+                check += 1;
             }
 
             @Override

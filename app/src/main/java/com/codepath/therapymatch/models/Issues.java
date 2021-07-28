@@ -1,8 +1,10 @@
 package com.codepath.therapymatch.models;
 
+import com.parse.ParseObject;
+
 import java.util.HashSet;
 
-public class Issues {
+public class Issues{
     // <"issue", null>
     public HashSet<String> issues = new HashSet<String>();
 
@@ -14,7 +16,7 @@ public class Issues {
         issues.remove(key);
     }
 
-    public Boolean containsKey(String key){
+    public boolean containsKey(String key){
         Boolean check = issues.contains(key);
         return check;
     }
