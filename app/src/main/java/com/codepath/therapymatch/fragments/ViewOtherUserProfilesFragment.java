@@ -2,8 +2,6 @@ package com.codepath.therapymatch.fragments;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -12,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.codepath.therapymatch.FragmentAdapter;
+import com.codepath.therapymatch.PostsActivity;
 import com.codepath.therapymatch.R;
 import com.huxq17.swipecardsview.SwipeCardsView;
 import com.parse.FindCallback;
@@ -20,67 +19,173 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class ViewOtherUserProfilesFragment extends Fragment{
 
     private final String TAG = "ViewOtherUserProfiles";
     private SwipeCardsView swipeCardsView;
-    FragmentAdapter fragmentAdapter;
     List<ParseUser> users = new ArrayList<>();
+    private int count = 0;
     private int MAX_ITEMS = 20;
-    private GestureDetector gestureDetector;
+    ParseUser currentUser = ParseUser.getCurrentUser();
 
     public ViewOtherUserProfilesFragment() {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_view_other_user_profiles, container, false);
 
+        swipeCardsView =  view.findViewById(R.id.swipeCardsView);
+        swipeCardsView.retainLastCard(false);
+        swipeCardsView.enableSwipe(true);
+        queryUsers();
+
+        GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+            private static final float SWIPE_THRESHOLD = 100;
+            private static final float SWIPE_VELOCITY_THRESHOLD = 100;
+            @Override
+            public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
+                boolean result = false;
+                float diffX = moveEvent.getX() - downEvent.getX();
+                float diffY = moveEvent.getY() - downEvent.getY();
+
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    //right or left swipe
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffX > 0) {
+                            onSwipeRight();
+                        } else {
+                            onSwipeLeft();
+                        }
+                        result = true;
+                    }
+                } else {
+                    //up or down swipe
+                    if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffY > 0) {
+                            onSwipeBottom();
+                        } else {
+                            onSwipeTop();
+                        }
+                        result = true;
+                    }
+                }
+                return result;
+
+            }
+        };
+
+        GestureDetector gestureDetector = new GestureDetector(simpleOnGestureListener);
+
+        PostsActivity.MyOnTouchListener myOnTouchListener = new PostsActivity.MyOnTouchListener() {
+            @Override
+            public boolean onTouch(MotionEvent ev) {
+                gestureDetector.onTouchEvent(ev);
+                return false;
+            }
+        };
+        ((PostsActivity) getActivity()).registerMyOnTouchListener(myOnTouchListener);
+
+
+        return view;
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_other_user_profiles, container, false);
-    }
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        swipeCardsView = view.findViewById(R.id.swipeCardsView);
-        swipeCardsView.retainLastCard(false);
-        swipeCardsView.enableSwipe(true);
-
-        queryUsers();
     }
 
+    private void checkLikes(ParseUser user){
+        ArrayList<HashSet<ParseUser>> userLikes = (ArrayList<HashSet<ParseUser>>) user.get("likes");
+        if(userLikes == null || userLikes.isEmpty()) {
+            addLikes(user);
+            return;
+        }
+        HashSet<ParseUser> userLikesHS = userLikes.get(0);
+        if(userLikesHS.contains(currentUser)){
+            addMatches(user);
+        }else {
+            addLikes(user);
+        }
+    }
 
+    private void addMatches(ParseUser user) {
+        // get other user matches
+        ArrayList<HashSet<ParseUser>> userMatches = (ArrayList<HashSet<ParseUser>>) user.get("matches");
+        if(userMatches == null || userMatches.isEmpty()){
+            userMatches = new ArrayList<>();
+        }
+        HashSet<ParseUser> userMatchesHS = userMatches.get(0);
+        userMatchesHS.add(user);
+        userMatches.add(userMatchesHS);
+        user.put("matches", userMatches);
 
-    private void addLikes(ParseUser user) {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        ArrayList<ParseUser> userLikes = (ArrayList<ParseUser>) currentUser.get("likes");
-        if (userLikes == null) userLikes = new ArrayList<>();
-        userLikes.add(user);
-        //for (ParseUser user1: userLikes) Log.i(TAG, "liked user: "+ user1.getUsername().toString() );
-        currentUser.put("likes", userLikes);
+        // get current user matches
+        ArrayList<HashSet<ParseUser>> currentUserMatches = (ArrayList<HashSet<ParseUser>>) currentUser.get("Matches");
+        if(currentUserMatches == null || currentUserMatches.isEmpty()){
+            currentUserMatches = new ArrayList<>();
+        }
+        HashSet<ParseUser> currentUserMatchesHS = currentUserMatches.get(0);
+        currentUserMatchesHS.add(user);
+        currentUserMatches.add(userMatchesHS);
+        currentUser.put("matches", currentUserMatches);
+
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null) Log.e(TAG, "error: " + e);
+                Toast.makeText(getContext(), "User liked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         currentUser.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e == null) {
-                    Toast.makeText(getContext(), "Likes updated", Toast.LENGTH_SHORT).show();
-                }else{
-                    Log.e(TAG, "Error: " + e);
-                }
+                if(e != null) Log.e(TAG, "error: " + e);
             }
         });
 
     }
 
+    private void addLikes(ParseUser user) {
+        // get other user matches
+        ArrayList<HashSet<ParseUser>> userLikes = (ArrayList<HashSet<ParseUser>>) user.get("likes");
+        if(userLikes == null || userLikes.isEmpty()){
+            userLikes = new ArrayList<>();
+        }
+        HashSet<ParseUser> userLikesHS = userLikes.get(0);
+        userLikesHS.add(user);
+        userLikes.add(userLikesHS);
+        user.put("matches", userLikes);
+
+        // get current user matches
+        ArrayList<HashSet<ParseUser>> currentUserLikes = (ArrayList<HashSet<ParseUser>>) currentUser.get("likes");
+        if(currentUserLikes == null || currentUserLikes.isEmpty()){
+            currentUserLikes = new ArrayList<>();
+        }
+        HashSet<ParseUser> currentUserLikesHS = currentUserLikes.get(0);
+        currentUserLikesHS.add(user);
+        currentUserLikes.add(userLikesHS);
+        currentUser.put("matches", currentUserLikes);
+
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null) Log.e(TAG, "error: " + e);
+                Toast.makeText(getContext(), "User liked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        currentUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null) Log.e(TAG, "error: " + e);
+            }
+        });
+    }
 
     private void queryUsers(){
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -100,79 +205,124 @@ public class ViewOtherUserProfilesFragment extends Fragment{
                     FragmentAdapter fragmentAdapter = new FragmentAdapter(users, getContext());
                     swipeCardsView.setAdapter(fragmentAdapter);
                     for(ParseUser user1: users){
-                        if(user1 != null && user1.getUsername() != null) Log.i(TAG, "User: " + user1.getUsername().toString());
+                        //if(user1 != null && user1.getUsername() != null) Log.i(TAG, "User: " + user1.getUsername().toString());
                     }
                 }
             }
         });
     }
 
+    private void onSwipeLeft() {
+        Log.i("Swipe" , "left");
+        count += 1;
+    }
 
+    private void onSwipeBottom() {
+        Log.i("Swipe" , "bottom");
+        count += 1;
+    }
 
-    public class RotateUpPageTransformer implements ViewPager.PageTransformer{
-        private static final float ROTATION = -15f;
+    private void onSwipeTop() {
+        Log.i("Swipe" , "up");
+        count += 1;
+    }
 
-        @Override
-        public void transformPage( View page, float pos ) {
-            final float width = page.getWidth();
-            final float height = page.getHeight();
-            final float rotation = ROTATION * pos * -1.25f;
+    private void onSwipeRight() {
+        Log.i("Swipe" , "right");
+        Log.i("Swipe" , "username: " + users.get(count).getUsername().toString());
 
-            page.setPivotX( width * 0.5f );
-            page.setPivotY( height );
-            page.setRotation( rotation );
-
+        if(count < users.size()){
+            count += 1;
+            checkLikes(users.get(count));
         }
     }
 
 
 
-//    private class SwipeListener implements View.OnTouchListener{
-//        GestureDetector gestureDetector;
+//    public static class OnSwipeTouchListener implements View.OnTouchListener {
+//        private final GestureDetector gestureDetector;
+//        Context context;
 //
-//        SwipeListener(View view){
-//            int threshold = 100;
-//            int velocity_threshold = 100;
+//        OnSwipeTouchListener(Context ctx, View mainView) {
+//            gestureDetector = new GestureDetector(ctx, new GestureListener());
+//            mainView.setOnTouchListener(this);
+//            context = ctx;
+//        }
 //
-//            GestureDetector.SimpleOnGestureListener listener =
-//                    new GestureDetector.SimpleOnGestureListener(){
-//                        @Override
-//                        public boolean onDown(MotionEvent e){
-//                            return true;
-//                        }
+//        @Override
+//        public boolean onTouch(View v, MotionEvent event) {
+//            return gestureDetector.onTouchEvent(event);
+//        }
 //
-//                        @Override
-//                        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//                            float xDiff = e2.getX() - e1.getX();
-//                            float yDiff = e2.getY() - e1.getY();
-//                            try {
-//                                if(Math.abs(xDiff) > Math.abs(yDiff)){
-//                                    if(Math.abs(xDiff) > threshold && Math.abs(velocityX) > velocity_threshold){
-//                                        if(xDiff > 0){
-//                                            Log.i(TAG, "Swiped right");
-//                                        }else{
-//                                            Log.i(TAG, "Swiped left");
-//                                        }
-//                                        return true;
-//                                    }else {
-//                                        if(Math.abs(yDiff) > threshold && Math.abs(velocityY) > velocity_threshold){
-//                                            if(yDiff > 0){
-//                                                Log.i(TAG, "Swiped down");
-//                                            }else {
-//                                                Log.i(TAG, "Swiped up");
-//                                            }
-//                                            return true;
-//                                        }
-//                                    }
-//                                }
-//                            }catch (Exception e){
-//                                e.printStackTrace();
+//        public static class GestureListener extends GestureDetector.SimpleOnGestureListener {
+//            private static final int SWIPE_THRESHOLD = 100;
+//            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+//
+//            @Override
+//            public boolean onDown(MotionEvent e) {
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
+//                boolean result = false;
+//                try {
+//                    float diffY = moveEvent.getY() - downEvent.getY();
+//                    float diffX = moveEvent.getX() - downEvent.getX();
+//                    if (Math.abs(diffX) > Math.abs(diffY)) {
+//                        //right or left swipe
+//                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+//                            if (diffX > 0) {
+//                                onSwipeRight();
+//                            } else {
+//                                onSwipeLeft();
 //                            }
-//                            return false;
+//                            result = true;
 //                        }
-//                    };
-//            gestureDetector = new GestureDetector(listener);
-//            view.setOnTouchListener(this);
+//                    } else {
+//                        //up or down swipe
+//                        if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+//                            if (diffY > 0) {
+//                                onSwipeBottom();
+//                            } else {
+//                                onSwipeTop();
+//                            }
+//                            result = true;
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    Log.i("Some", "error: " + e);
+//                }
+//                return result;
+//            }
+//
+//            private void onSwipeTop() {
+//                Log.i("Some", "Swipe Up");
+//            }
+//
+//            private void onSwipeBottom() {
+//                Log.i("Some", "Swipe down");
+//            }
+//
+//            private void onSwipeLeft() {
+//                Log.i("Some", "Swipe left");
+//            }
+//
+//            private void onSwipeRight() {
+//                Log.i("Some", "Swipe right");
+//            }
+//
+//            interface onSwipeListener {
+//                void swipeRight();
+//
+//                void swipeTop();
+//
+//                void swipeBottom();
+//
+//                void swipeLeft();
+//            }
+//
+//            onSwipeListener onSwipe;
 //        }
 //    }
 }
