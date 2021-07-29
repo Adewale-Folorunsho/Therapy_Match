@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.ViewOtherUserProfilesFragment">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
+    <com.huxq17.swipecardsview.SwipeCardsView
+        android:id="@+id/swipeCardsView"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:foregroundGravity="center"
-        android:overScrollMode="never"
-        ></androidx.viewpager.widget.ViewPager>
+        app:alphaOffsetStep = "20"
+        app:scaleOffsetStep = "0.08"
+        app:yOffsetStep = "20dp"
+        >
+    </com.huxq17.swipecardsview.SwipeCardsView>
 
 </RelativeLayout>

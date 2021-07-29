@@ -1,94 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ViewOtherUserSwipeFragment">
+    android:layout_gravity="center_horizontal"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="3dp">
 
-
-    <ImageView
-        android:id="@+id/ivNUserProfilePicture"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="248dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        tools:src="@tools:sample/avatars" />
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/ivNUserProfilePicture"
+            android:layout_width="match_parent"
+            android:layout_height="248dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            tools:src="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/tvNUProfileUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivNUserProfilePicture"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        tools:text="Name" />
+        <TextView
+            android:id="@+id/tvNUProfileUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivNUserProfilePicture"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="Name" />
 
-    <TextView
-        android:id="@+id/tvBioHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvNUProfileUsername"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="false"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:text="Bio"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvBioHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvNUProfileUsername"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="false"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:text="Bio"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tvBio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvBioHeader"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="false"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        android:hint="This is my bio" />
+        <TextView
+            android:id="@+id/tvBio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvBioHeader"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="false"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:hint="This is my bio" />
 
-    <TextView
-        android:id="@+id/tvIssuesHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvBio"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="false"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:text="Issues"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvIssuesHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvBio"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="false"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:text="Issues"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tvIssues"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvIssuesHeader"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="false"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        tools:text="this, that, that, this" />
+        <TextView
+            android:id="@+id/tvIssues"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvIssuesHeader"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="false"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            tools:text="this, that, that, this" />
 
-    <TextView
-        android:id="@+id/tvDistance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="44dp"
-        android:textSize="20sp"
-        android:textStyle="bold|italic"
-        tools:text="3 miles away" />
+        <TextView
+            android:id="@+id/tvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="44dp"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            tools:text="3 miles away" />
+    </RelativeLayout>
 
-</RelativeLayout>
+</androidx.cardview.widget.CardView>

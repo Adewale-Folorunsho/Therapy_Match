@@ -25,12 +25,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.therapymatch.R;
-import com.codepath.therapymatch.models.Issues;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
