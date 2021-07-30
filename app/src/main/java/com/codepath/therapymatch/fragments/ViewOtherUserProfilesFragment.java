@@ -8,20 +8,18 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import com.codepath.therapymatch.FragmentAdapter;
 import com.codepath.therapymatch.PostsActivity;
 import com.codepath.therapymatch.R;
 import com.huxq17.swipecardsview.SwipeCardsView;
 import com.parse.FindCallback;
-import com.parse.Parse;
-import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ViewOtherUserProfilesFragment extends Fragment{
@@ -38,10 +36,10 @@ public class ViewOtherUserProfilesFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_other_user_profiles, container, false);
-
         swipeCardsView =  view.findViewById(R.id.swipeCardsView);
         swipeCardsView.retainLastCard(false);
         swipeCardsView.enableSwipe(true);
+
         queryUsers();
 
         GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
@@ -89,6 +87,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
             }
         };
         ((PostsActivity) getActivity()).registerMyOnTouchListener(myOnTouchListener);
+
         return view;
     }
 
@@ -103,6 +102,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         ParseGeoPoint currentUserLocation = (ParseGeoPoint) currentUser.get("location");
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         query.whereWithinMiles("location", currentUserLocation, 10);
+
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> usersFromDB, ParseException e) {
@@ -110,16 +110,20 @@ public class ViewOtherUserProfilesFragment extends Fragment{
                     Log.e(TAG, "Error getting users: " + e);
                     return;
                 }else{
-                    for(ParseUser user: usersFromDB){
-                        if(!(inCurrentUserLikes(user))){
-                            if( (!currentUser.getObjectId().equals(user.getObjectId())) ){
+                    for(ParseUser user: usersFromDB) {
+                        if (!(inCurrentUserLikes(user))) {
+                            if ((!currentUser.getObjectId().equals(user.getObjectId()))) {
                                 Log.i(TAG, user.getUsername().toString());
                                 users.add(user);
                             }
-
+                        }else{
+                            if(inOtherUserLikes(user) && !(inCurrentUserMatches(user))){
+                                addToMatches(user);
+                            }
                         }
                     }
                 }
+                    sortUsersByIssues(users);
                     FragmentAdapter fragmentAdapter = new FragmentAdapter(users, getContext());
                     swipeCardsView.setAdapter(fragmentAdapter);
             }
@@ -167,12 +171,10 @@ public class ViewOtherUserProfilesFragment extends Fragment{
     // if in other user likes, match. else add other user to likes
     private void inLikesOrMatches(ParseUser likedUser) {
         ArrayList<ParseUser> currentUserLikes = new ArrayList<>();
-        ParseUser user = new ParseUser();
-        if(inOtherUserLikes(likedUser)){
+        if(inOtherUserLikes(likedUser)) {
             addToMatches(likedUser);
-        }else{
-            addToLikes(likedUser);
         }
+        addToLikes(likedUser);
     }
 
     // check if current user has already been liked the liked user
@@ -190,8 +192,8 @@ public class ViewOtherUserProfilesFragment extends Fragment{
     }
 
     //add to current user list of matches
-    private void addToMatches(ParseUser likedUser) {
-        currentUser.add("matches", likedUser);
+    private void addToMatches(ParseUser matchedUser) {
+        currentUser.add("matches", matchedUser);
         currentUser.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -239,6 +241,17 @@ public class ViewOtherUserProfilesFragment extends Fragment{
             if(user.getObjectId().equals(matchedUser.getObjectId())) return true;
         }
         return false;
+    }
+
+    //sort users by issues.
+    private void sortUsersByIssues(List<ParseUser> users) {
+        ArrayList<String> currentUserIssues = (ArrayList<String>) currentUser.get("issues");
+        HashMap<ParseUser,String> commonIssues = new HashMap<>();
+
+
+
+
+
     }
 }
 
