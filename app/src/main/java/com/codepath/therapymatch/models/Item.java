@@ -9,4 +9,12 @@ public class Item {
         this.noOfCommonIssues = noOfCommonIssues;
         this.user = user;
     }
+
+    public Integer getnoOfCommonIssues(){
+        return noOfCommonIssues;
+    }
+
+    public ParseUser getUser(){
+        return user;
+    }
 }

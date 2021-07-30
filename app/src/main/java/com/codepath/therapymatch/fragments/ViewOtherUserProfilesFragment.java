@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.codepath.therapymatch.FragmentAdapter;
 import com.codepath.therapymatch.PostsActivity;
 import com.codepath.therapymatch.R;
+import com.codepath.therapymatch.models.Item;
 import com.huxq17.swipecardsview.SwipeCardsView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -20,6 +21,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class ViewOtherUserProfilesFragment extends Fragment{
@@ -246,12 +248,80 @@ public class ViewOtherUserProfilesFragment extends Fragment{
     //sort users by issues.
     private void sortUsersByIssues(List<ParseUser> users) {
         ArrayList<String> currentUserIssues = (ArrayList<String>) currentUser.get("issues");
-        HashMap<ParseUser,String> commonIssues = new HashMap<>();
+        ArrayList<Item> sortedItems = new ArrayList<>();
+        ArrayList<Item> listedItems = new ArrayList<>();
+
+        //listUsers -> ListItems
+        listedItems = convertToListItems(currentUserIssues,users);
+
+        sortedItems = bubbleSort(listedItems,users);
+
+        //listitems -> listUsers
+        users = convertToListUsers(sortedItems);
 
 
+    }
 
+    private List<ParseUser> convertToListUsers(ArrayList<Item> sortedItems) {
+        ArrayList<ParseUser> users = new ArrayList<>();
+        for(Item item: sortedItems){
+            users.add(0, item.getUser());
+        }
+        return users;
+    }
 
+    private ArrayList<Item> bubbleSort(ArrayList<Item> listedItems, List<ParseUser> users) {
+        int n = listedItems.size();
+        int i, j;
+        Item temp;
+        boolean swapped;
+        for (i = 0; i < n - 1; i++)
+        {
+            swapped = false;
+            for (j = 0; j < n - i - 1; j++)
+            {
+                if (listedItems.get(j).getnoOfCommonIssues() > listedItems.get(j + 1).getnoOfCommonIssues())
+                {
+                    // swap arr[j] and arr[j+1]
+                    temp = listedItems.get(j);
+                    listedItems.set(j, listedItems.get(j + 1));
+                    listedItems.set(j + 1, temp);
+                    swapped = true;
+                }
+            }
 
+            if (swapped == false)
+                break;
+        }
+        return listedItems;
+    }
+
+    private ArrayList<Item> convertToListItems(ArrayList<String> currentUserIssues, List<ParseUser> users) {
+        ArrayList<Item> currentUserIssuesList = new ArrayList<>();
+        ArrayList<String> userIssues = new ArrayList<>();
+        HashSet<String> HSCurrentUser = new HashSet<>();
+        HashSet<String> HSUser = new HashSet<>();
+        Integer commonIssues;
+        for(String issue: currentUserIssues){
+            HSCurrentUser.add(issue);
+        }
+        for(ParseUser user: users){
+            if (user.get("issues") != null) {
+                userIssues = (ArrayList<String>) user.get("issues");
+
+                HSUser = new HashSet<>();
+                for (String issue : userIssues) {
+                    HSUser.add(issue);
+                }
+                HSUser.retainAll(HSCurrentUser);
+                commonIssues = HSUser.size();
+            }else{
+                commonIssues = 0;
+            }
+            Item item = new Item(commonIssues, user);
+            currentUserIssuesList.add(item);
+        }
+        return currentUserIssuesList;
     }
 }
 
