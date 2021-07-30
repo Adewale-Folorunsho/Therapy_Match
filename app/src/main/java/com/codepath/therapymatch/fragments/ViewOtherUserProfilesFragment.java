@@ -14,13 +14,14 @@ import com.codepath.therapymatch.PostsActivity;
 import com.codepath.therapymatch.R;
 import com.huxq17.swipecardsview.SwipeCardsView;
 import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class ViewOtherUserProfilesFragment extends Fragment{
@@ -28,8 +29,8 @@ public class ViewOtherUserProfilesFragment extends Fragment{
     private final String TAG = "ViewOtherUserProfiles";
     private SwipeCardsView swipeCardsView;
     List<ParseUser> users = new ArrayList<>();
-    private int count = 0;
     private int MAX_ITEMS = 20;
+    private int count = 0;
     ParseUser currentUser = ParseUser.getCurrentUser();
 
     public ViewOtherUserProfilesFragment() {}
@@ -88,8 +89,6 @@ public class ViewOtherUserProfilesFragment extends Fragment{
             }
         };
         ((PostsActivity) getActivity()).registerMyOnTouchListener(myOnTouchListener);
-
-
         return view;
     }
 
@@ -98,116 +97,31 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void checkLikes(ParseUser user){
-        ArrayList<HashSet<ParseUser>> userLikes = (ArrayList<HashSet<ParseUser>>) user.get("likes");
-        if(userLikes == null || userLikes.isEmpty()) {
-            addLikes(user);
-            return;
-        }
-        HashSet<ParseUser> userLikesHS = userLikes.get(0);
-        if(userLikesHS.contains(currentUser)){
-            addMatches(user);
-        }else {
-            addLikes(user);
-        }
-    }
-
-    private void addMatches(ParseUser user) {
-        // get other user matches
-        ArrayList<HashSet<ParseUser>> userMatches = (ArrayList<HashSet<ParseUser>>) user.get("matches");
-        if(userMatches == null || userMatches.isEmpty()){
-            userMatches = new ArrayList<>();
-        }
-        HashSet<ParseUser> userMatchesHS = userMatches.get(0);
-        userMatchesHS.add(user);
-        userMatches.add(userMatchesHS);
-        user.put("matches", userMatches);
-
-        // get current user matches
-        ArrayList<HashSet<ParseUser>> currentUserMatches = (ArrayList<HashSet<ParseUser>>) currentUser.get("Matches");
-        if(currentUserMatches == null || currentUserMatches.isEmpty()){
-            currentUserMatches = new ArrayList<>();
-        }
-        HashSet<ParseUser> currentUserMatchesHS = currentUserMatches.get(0);
-        currentUserMatchesHS.add(user);
-        currentUserMatches.add(userMatchesHS);
-        currentUser.put("matches", currentUserMatches);
-
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e != null) Log.e(TAG, "error: " + e);
-                Toast.makeText(getContext(), "User liked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        currentUser.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e != null) Log.e(TAG, "error: " + e);
-            }
-        });
-
-    }
-
-    private void addLikes(ParseUser user) {
-        // get other user matches
-        ArrayList<HashSet<ParseUser>> userLikes = (ArrayList<HashSet<ParseUser>>) user.get("likes");
-        if(userLikes == null || userLikes.isEmpty()){
-            userLikes = new ArrayList<>();
-        }
-        HashSet<ParseUser> userLikesHS = userLikes.get(0);
-        userLikesHS.add(user);
-        userLikes.add(userLikesHS);
-        user.put("matches", userLikes);
-
-        // get current user matches
-        ArrayList<HashSet<ParseUser>> currentUserLikes = (ArrayList<HashSet<ParseUser>>) currentUser.get("likes");
-        if(currentUserLikes == null || currentUserLikes.isEmpty()){
-            currentUserLikes = new ArrayList<>();
-        }
-        HashSet<ParseUser> currentUserLikesHS = currentUserLikes.get(0);
-        currentUserLikesHS.add(user);
-        currentUserLikes.add(userLikesHS);
-        currentUser.put("matches", currentUserLikes);
-
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e != null) Log.e(TAG, "error: " + e);
-                Toast.makeText(getContext(), "User liked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        currentUser.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e != null) Log.e(TAG, "error: " + e);
-            }
-        });
-    }
-
     private void queryUsers(){
+        count = 0;
         ParseUser currentUser = ParseUser.getCurrentUser();
         ParseGeoPoint currentUserLocation = (ParseGeoPoint) currentUser.get("location");
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         query.whereWithinMiles("location", currentUserLocation, 10);
-        query.setLimit(MAX_ITEMS);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> usersFromDB, ParseException e) {
                 if(e != null){
-                    e.printStackTrace();
-                    Log.e(TAG, "Error getting posts");
+                    Log.e(TAG, "Error getting users: " + e);
                     return;
                 }else{
-                    users.addAll(usersFromDB);
-                    FragmentAdapter fragmentAdapter = new FragmentAdapter(users, getContext());
-                    swipeCardsView.setAdapter(fragmentAdapter);
-                    for(ParseUser user1: users){
-                        //if(user1 != null && user1.getUsername() != null) Log.i(TAG, "User: " + user1.getUsername().toString());
+                    for(ParseUser user: usersFromDB){
+                        if(!(inCurrentUserLikes(user))){
+                            if( (!currentUser.getObjectId().equals(user.getObjectId())) ){
+                                Log.i(TAG, user.getUsername().toString());
+                                users.add(user);
+                            }
+
+                        }
                     }
                 }
+                    FragmentAdapter fragmentAdapter = new FragmentAdapter(users, getContext());
+                    swipeCardsView.setAdapter(fragmentAdapter);
             }
         });
     }
@@ -215,116 +129,117 @@ public class ViewOtherUserProfilesFragment extends Fragment{
     private void onSwipeLeft() {
         Log.i("Swipe" , "left");
         count += 1;
+        if(count >= users.size()){
+            users.clear();
+            queryUsers();
+        }
     }
 
     private void onSwipeBottom() {
         Log.i("Swipe" , "bottom");
         count += 1;
+        if(count >= users.size()){
+            users.clear();
+            queryUsers();
+        }
     }
 
     private void onSwipeTop() {
         Log.i("Swipe" , "up");
         count += 1;
+        if(count >= users.size()){
+            users.clear();
+            queryUsers();
+        }
     }
 
     private void onSwipeRight() {
         Log.i("Swipe" , "right");
         Log.i("Swipe" , "username: " + users.get(count).getUsername().toString());
-
-        if(count < users.size()){
-            count += 1;
-            checkLikes(users.get(count));
+        inLikesOrMatches(users.get(count));
+        count += 1;
+        if(count >= users.size()){
+            users.clear();
+            queryUsers();
         }
     }
 
+    // if in other user likes, match. else add other user to likes
+    private void inLikesOrMatches(ParseUser likedUser) {
+        ArrayList<ParseUser> currentUserLikes = new ArrayList<>();
+        ParseUser user = new ParseUser();
+        if(inOtherUserLikes(likedUser)){
+            addToMatches(likedUser);
+        }else{
+            addToLikes(likedUser);
+        }
+    }
 
+    // check if current user has already been liked the liked user
+    private boolean inOtherUserLikes(ParseUser likedUser) {
+        ArrayList<ParseUser> userLikes = new ArrayList<ParseUser>();
+        ParseUser user = new ParseUser();
+        if(likedUser.get("likes") != null){
+            userLikes = (ArrayList<ParseUser>) likedUser.get("likes");
+        }
+        for (int position = 0; position < userLikes.size(); position++){
+            user = userLikes.get(position);
+            if(user.getObjectId().equals(currentUser.getObjectId())) return true;
+        }
+        return false;
+    }
 
-//    public static class OnSwipeTouchListener implements View.OnTouchListener {
-//        private final GestureDetector gestureDetector;
-//        Context context;
-//
-//        OnSwipeTouchListener(Context ctx, View mainView) {
-//            gestureDetector = new GestureDetector(ctx, new GestureListener());
-//            mainView.setOnTouchListener(this);
-//            context = ctx;
-//        }
-//
-//        @Override
-//        public boolean onTouch(View v, MotionEvent event) {
-//            return gestureDetector.onTouchEvent(event);
-//        }
-//
-//        public static class GestureListener extends GestureDetector.SimpleOnGestureListener {
-//            private static final int SWIPE_THRESHOLD = 100;
-//            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-//
-//            @Override
-//            public boolean onDown(MotionEvent e) {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
-//                boolean result = false;
-//                try {
-//                    float diffY = moveEvent.getY() - downEvent.getY();
-//                    float diffX = moveEvent.getX() - downEvent.getX();
-//                    if (Math.abs(diffX) > Math.abs(diffY)) {
-//                        //right or left swipe
-//                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-//                            if (diffX > 0) {
-//                                onSwipeRight();
-//                            } else {
-//                                onSwipeLeft();
-//                            }
-//                            result = true;
-//                        }
-//                    } else {
-//                        //up or down swipe
-//                        if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-//                            if (diffY > 0) {
-//                                onSwipeBottom();
-//                            } else {
-//                                onSwipeTop();
-//                            }
-//                            result = true;
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    Log.i("Some", "error: " + e);
-//                }
-//                return result;
-//            }
-//
-//            private void onSwipeTop() {
-//                Log.i("Some", "Swipe Up");
-//            }
-//
-//            private void onSwipeBottom() {
-//                Log.i("Some", "Swipe down");
-//            }
-//
-//            private void onSwipeLeft() {
-//                Log.i("Some", "Swipe left");
-//            }
-//
-//            private void onSwipeRight() {
-//                Log.i("Some", "Swipe right");
-//            }
-//
-//            interface onSwipeListener {
-//                void swipeRight();
-//
-//                void swipeTop();
-//
-//                void swipeBottom();
-//
-//                void swipeLeft();
-//            }
-//
-//            onSwipeListener onSwipe;
-//        }
-//    }
+    //add to current user list of matches
+    private void addToMatches(ParseUser likedUser) {
+        currentUser.add("matches", likedUser);
+        currentUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null) {
+                    Log.e(TAG, "error: " + e);
+                    return;
+                }
+                else{
+                    Log.i(TAG, "user matched");
+                }
+            }
+        });
+    }
+
+    //add to current user list of likes
+    private void addToLikes(ParseUser likedUser) {
+        currentUser.add("likes", likedUser);
+        currentUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null) {
+                    Log.e(TAG, "error: " + e);
+                    return;
+                }
+                else{
+                    Log.i(TAG, "user liked");
+                }
+            }
+        });
+    }
+
+    private boolean inCurrentUserLikes(ParseUser user) {
+        ArrayList<ParseUser> currentUserLikes = new ArrayList<>();
+        if(currentUser.get("likes") != null) currentUserLikes = (ArrayList<ParseUser>) currentUser.get("likes");
+        for (ParseUser likedUser: currentUserLikes){
+            if(user.getObjectId().equals(likedUser.getObjectId())) return true;
+        }
+        return false;
+    }
+
+    private boolean inCurrentUserMatches(ParseUser user) {
+        ArrayList<ParseUser> currentUserMatches = new ArrayList<>();
+        if(currentUser.get("matches") != null) currentUserMatches = (ArrayList<ParseUser>) currentUser.get("matches");
+        for (ParseUser matchedUser: currentUserMatches){
+            if(user.getObjectId().equals(matchedUser.getObjectId())) return true;
+        }
+        return false;
+    }
 }
 
 

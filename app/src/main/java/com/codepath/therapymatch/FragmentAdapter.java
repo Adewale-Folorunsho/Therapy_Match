@@ -20,22 +20,6 @@ public class FragmentAdapter extends BaseCardAdapter {
         this.context = context;
     }
 
-//    @NonNull
-//    @Override
-//    public Fragment getItem(int position) {
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable("User", (Parcelable) users.get(position));
-//        ViewOtherUserSwipeFragment fragment = new ViewOtherUserSwipeFragment();
-//        fragment.setArguments(bundle);
-//        return fragment;
-//    }
-//
-//
-//    @Override
-//    public int getItemPosition(Object object){
-//        return FragmentAdapter.POSITION_NONE;
-//    }
-
     @Override
     public int getCount() {
         return users.size();

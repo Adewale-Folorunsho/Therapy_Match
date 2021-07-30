@@ -99,11 +99,11 @@ public class PostFragment extends Fragment {
                 if(e != null){
                     Log.e(TAG, "Error getting posts");
                     return;
+                }else{
+//                    for(Post post : postsFromDB) {
+//                        Log.i(TAG, "Username: " + post.getUser().getUsername() + " Description: " + post.getDescription() + " Time: " + post.getTime());
+//                    }
                 }
-
-//                for(Post post : postsFromDB){
-//                    Log.i(TAG, "Username: " + post.getUser().getUsername() + " Description: " + post.getDescription() + " Time: " + post.getTime());
-//                }
 
                 posts.addAll(postsFromDB);
                 postsAdapter.notifyDataSetChanged();
