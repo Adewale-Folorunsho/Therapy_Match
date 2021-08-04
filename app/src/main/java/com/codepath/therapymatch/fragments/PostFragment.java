@@ -10,11 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
 import com.codepath.therapymatch.MakePostActivity;
 import com.codepath.therapymatch.PostsAdapter;
 import com.codepath.therapymatch.R;
 import com.codepath.therapymatch.models.Post;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -30,7 +31,7 @@ public class PostFragment extends Fragment {
     public List<Post> posts;
     protected PostsAdapter postsAdapter;
     private SwipeRefreshLayout swipeContainer;
-    Button btnMakePost;
+    FloatingActionButton btnMakePost;
     RecyclerView rvPosts;
 
     public PostFragment() {}
@@ -77,13 +78,12 @@ public class PostFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
         queryPosts();
+
     }
 
     private void fetchTimelineAsync() {
         posts.clear();
-        postsAdapter.notifyDataSetChanged();
         queryPosts();
     }
 
@@ -97,12 +97,8 @@ public class PostFragment extends Fragment {
             @Override
             public void done(List<Post> postsFromDB, ParseException e) {
                 if(e != null){
-                    Log.e(TAG, "Error getting posts");
+                    Log.e(TAG, "Error getting posts " + e);
                     return;
-                }else{
-//                    for(Post post : postsFromDB) {
-//                        Log.i(TAG, "Username: " + post.getUser().getUsername() + " Description: " + post.getDescription() + " Time: " + post.getTime());
-//                    }
                 }
 
                 posts.addAll(postsFromDB);

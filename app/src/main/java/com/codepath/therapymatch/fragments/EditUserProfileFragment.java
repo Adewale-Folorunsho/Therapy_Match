@@ -21,9 +21,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.codepath.therapymatch.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseException;
@@ -50,6 +52,8 @@ public class EditUserProfileFragment extends Fragment {
     String username;
     String strAddress;
     String bio;
+    String issues = new String();
+    TextView tvShowIssues;
     EditText etUsernameChange;
     EditText etBioChange;
     EditText etAddressChange;
@@ -58,6 +62,7 @@ public class EditUserProfileFragment extends Fragment {
     ImageView ivPreview;
     Button btnSave;
     ParseGeoPoint latLong;
+    ParseGeoPoint currentUserLatLong;
     FloatingActionButton fabCUEditProfile;
     FloatingActionButton fabAddIssue;
     View view;
@@ -90,6 +95,7 @@ public class EditUserProfileFragment extends Fragment {
         etAddressChange = view.findViewById(R.id.etAddressChange);
         etIssuesChange = view.findViewById(R.id.etIssuesChange);
         ivCUProfilePicture = view.findViewById(R.id.ivCUProfilePicture);
+        tvShowIssues = view.findViewById(R.id.tvShowIssues);
         btnSave = view.findViewById(R.id.btnSave);
         fabCUEditProfile = view.findViewById(R.id.fabCUEditProfile);
         fabAddIssue = view.findViewById(R.id.fabAddIssue);
@@ -126,12 +132,11 @@ public class EditUserProfileFragment extends Fragment {
 
     private void addIssue() {
         String strIssues = etIssuesChange.getText().toString();
-        ArrayList<String> issues = new ArrayList<>();
+        ArrayList<String> issuesList = new ArrayList<>();
 
-        if(currentUser.get("issues") != null) issues = (ArrayList<String>) currentUser.get("issues");
-
-        issues.add(strIssues);
-        currentUser.put("issues", issues);
+        if(currentUser.get("issues") != null) issuesList = (ArrayList<String>) currentUser.get("issues");
+        issuesList.add(strIssues);
+        currentUser.put("issues", issuesList);
         currentUser.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -139,9 +144,14 @@ public class EditUserProfileFragment extends Fragment {
                 Toast.makeText(getContext(), "Issue Added", Toast.LENGTH_SHORT).show();
             }
         });
+
+        issues += ", " + strIssues;
+        tvShowIssues.setText(issues);
     }
 
     private void geocodeAddress(String strAddress) {
+        currentUser.put("address", strAddress);
+
         Geocoder geocoder = new Geocoder(getContext());
         try {
             addressList = geocoder.getFromLocationName(strAddress, 1);
@@ -150,19 +160,38 @@ public class EditUserProfileFragment extends Fragment {
             latLong = new ParseGeoPoint((location.getLatitude()),(location.getLongitude()));
             currentUser.put("location", latLong);
         } catch (IOException e) {
-            Log.e(TAG,"Error loading address: "+e);
+            Log.e(TAG,"Error loading address: " + e);
         }
     }
 
     private void getUserInitialData() {
         username = currentUser.getUsername();
         ImageFile = currentUser.getParseFile("profileImage");
-        Glide.with(getContext()).load(ImageFile.getUrl()).placeholder(R.drawable.ic_baseline_cloud_download_24).into(ivCUProfilePicture);
+        getIssues();
+        tvShowIssues.setText(issues);
+        Glide.with(getContext())
+                .load(ImageFile.getUrl())
+                .placeholder(R.drawable.ic_baseline_cloud_download_24)
+                .into(ivCUProfilePicture);
 
         if(currentUser.get("bio") != null){
             bio = currentUser.get("bio").toString();
             etBioChange.setText(bio);
         }
+
+        if(currentUser.get("address") != null){
+            strAddress = currentUser.get("address").toString();
+            etAddressChange.setText(strAddress);
+        }
+    }
+
+    private void getIssues() {
+        issues = "";
+        ArrayList issuesList = (ArrayList) currentUser.get("issues");
+
+        if(issuesList.size() != 0) issues += issuesList.get(0);
+
+        for (int position = 1; position < issuesList.size(); position++) issues += ", " + issuesList.get(position);
     }
 
     private void updateUser(String bio, String username, File photoFile) {
@@ -170,6 +199,7 @@ public class EditUserProfileFragment extends Fragment {
         if(photoFile != null) {
             currentUser.put("profileImage", new ParseFile(photoFile));
         }
+
         currentUser.setUsername(username);
         currentUser.put("bio", bio);
         Log.i(TAG, "new bio: " + bio);

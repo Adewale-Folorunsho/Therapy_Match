@@ -19,6 +19,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText etUsername;
     EditText etPassword;
     Button btnLogin;
+    Button btnSignup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        btnSignup = findViewById(R.id.btnSignup);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,6 +41,15 @@ public class LoginActivity extends AppCompatActivity {
                 String password = etPassword.getText().toString();
                 Log.i(TAG, "User tried logging in");
                 loginUser(username, password);
+            }
+        });
+
+        btnSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Login from Launch clicked");
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -53,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 viewOtherUserPosts();
-                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
             }
         });
     }

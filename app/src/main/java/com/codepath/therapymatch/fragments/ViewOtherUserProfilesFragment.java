@@ -103,7 +103,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         ParseUser currentUser = ParseUser.getCurrentUser();
         ParseGeoPoint currentUserLocation = (ParseGeoPoint) currentUser.get("location");
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-        query.whereWithinMiles("location", currentUserLocation, 10);
+        query.whereWithinMiles("location", currentUserLocation, 100);
 
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override

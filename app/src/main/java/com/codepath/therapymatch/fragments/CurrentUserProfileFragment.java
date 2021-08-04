@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.therapymatch.LaunchActivity;
+import com.codepath.therapymatch.LoginActivity;
 import com.codepath.therapymatch.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseFile;
@@ -84,7 +85,7 @@ public class CurrentUserProfileFragment extends Fragment {
         getActivity().finish();
         ParseUser.logOut();
 
-        Intent intent = new Intent(getContext(), LaunchActivity.class);
+        Intent intent = new Intent(getContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
