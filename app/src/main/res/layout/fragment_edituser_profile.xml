@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#262F34"
+    android:background="#F4F2E8"
     tools:context=".fragments.EditUserProfileFragment">
 
     <ImageView
@@ -26,6 +26,7 @@
         android:layout_marginEnd="-35dp"
         android:layout_toStartOf="@+id/ivCUProfilePicture"
         android:clickable="true"
+        android:backgroundTint="#FFD500"
         android:src="@android:drawable/ic_menu_edit"
         tools:src="@android:drawable/ic_menu_edit" />
 
@@ -38,7 +39,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="40dp"
         android:text="Username"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:textSize="16dp"
         android:textStyle="bold" />
 
@@ -50,9 +51,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="false"
         android:layout_marginTop="10dp"
-        android:background="#F6F6F6"
+        android:background="#FFFFFF"
         android:hint="Type your username"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:textColorHint="#6A6A6A"
         android:textSize="14sp" />
 
@@ -66,7 +67,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         android:text="Bio"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -78,9 +79,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="false"
         android:layout_marginTop="10dp"
-        android:background="#F6F6F6"
+        android:background="#FFFFFF"
         android:hint="Type your bio"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:textColorHint="#6A6A6A"
         android:textSize="14sp" />
 
@@ -94,7 +95,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         android:text="Address"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -106,9 +107,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="false"
         android:layout_marginTop="10dp"
-        android:background="#F6F6F6"
+        android:background="#FFFFFF"
         android:hint="Type your address"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:textColorHint="#6A6A6A"
         android:textSize="14sp" />
 
@@ -122,24 +123,26 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         android:text="Issues"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="visible" />
 
     <EditText
         android:id="@+id/etIssuesChange"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/tvCUIssues"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="false"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="4dp"
-        android:background="#F6F6F6"
+        android:background="#FFFFFF"
         android:hint="Add an issue"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:textColorHint="#474545"
-        android:textSize="12sp" />
+        android:textSize="14sp"
+        android:visibility="visible" />
 
     <Button
         android:id="@+id/btnSave"
@@ -150,7 +153,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginEnd="4dp"
         android:backgroundTint="#FFFFFF"
-        android:textColor="@color/black"
+        android:textColor="#000000"
         android:text="Save" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -162,22 +165,22 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
+        android:backgroundTint="#FFD500"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add" />
 
     <TextView
         android:id="@+id/tvShowIssues"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/etIssuesChange"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="false"
         android:layout_marginStart="0dp"
         android:layout_marginTop="10dp"
-        android:hint="Show Issues"
+        android:fontFamily="serif-monospace"
         android:textColor="#000000"
-        android:textSize="14.5dp"
-        android:textStyle="italic" />
+        android:textSize="15dp" />
 
 </RelativeLayout>
 

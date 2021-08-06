@@ -20,7 +20,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -30,6 +29,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
     private SwipeCardsView swipeCardsView;
     List<ParseUser> users = new ArrayList<>();
     private int MAX_ITEMS = 20;
+    private int MAX_DISTANCE = 100;
     private int count = 0;
     ParseUser currentUser = ParseUser.getCurrentUser();
 
@@ -103,7 +103,8 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         ParseUser currentUser = ParseUser.getCurrentUser();
         ParseGeoPoint currentUserLocation = (ParseGeoPoint) currentUser.get("location");
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-        query.whereWithinMiles("location", currentUserLocation, 100);
+        query.setLimit(MAX_ITEMS);
+        // if(currentUserLocation != null) query.whereWithinMiles("location", currentUserLocation, MAX_DISTANCE);
 
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
@@ -112,6 +113,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
                     Log.e(TAG, "Error getting users: " + e);
                     return;
                 }else{
+                    users.clear();
                     for(ParseUser user: usersFromDB) {
                         if (!(inCurrentUserLikes(user))) {
                             if ((!currentUser.getObjectId().equals(user.getObjectId()))) {
@@ -125,7 +127,8 @@ public class ViewOtherUserProfilesFragment extends Fragment{
                         }
                     }
                 }
-                    sortUsersByIssues(users);
+
+                    if(currentUser.get("issues") != null) sortUsersByIssues(users);
                     FragmentAdapter fragmentAdapter = new FragmentAdapter(users, getContext());
                     swipeCardsView.setAdapter(fragmentAdapter);
             }
@@ -136,7 +139,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         Log.i("Swipe" , "left");
         count += 1;
         if(count >= users.size()){
-            users.clear();
+            MAX_DISTANCE += 10000;
             queryUsers();
         }
     }
@@ -146,6 +149,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         count += 1;
         if(count >= users.size()){
             users.clear();
+            MAX_DISTANCE += 30;
             queryUsers();
         }
     }
@@ -155,6 +159,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         count += 1;
         if(count >= users.size()){
             users.clear();
+            MAX_DISTANCE += 30;
             queryUsers();
         }
     }
@@ -166,6 +171,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         count += 1;
         if(count >= users.size()){
             users.clear();
+            MAX_DISTANCE += 30;
             queryUsers();
         }
     }
@@ -245,7 +251,6 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         return false;
     }
 
-    //sort users by issues.
     private void sortUsersByIssues(List<ParseUser> users) {
         ArrayList<String> currentUserIssues = (ArrayList<String>) currentUser.get("issues");
         ArrayList<Item> sortedItems = new ArrayList<>();

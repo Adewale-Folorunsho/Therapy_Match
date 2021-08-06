@@ -53,7 +53,7 @@ public class PostsActivity extends AppCompatActivity {
                 return true;
             }
         });
-        bottomNavigationView.setSelectedItemId(R.id.actionPosts);
+        bottomNavigationView.setSelectedItemId(R.id.actionOtherUserProfile);
     }
 
     public interface MyOnTouchListener {

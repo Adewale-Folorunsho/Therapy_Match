@@ -188,8 +188,9 @@ public class EditUserProfileFragment extends Fragment {
     private void getIssues() {
         issues = "";
         ArrayList issuesList = (ArrayList) currentUser.get("issues");
+        if(issuesList == null) return;
 
-        if(issuesList.size() != 0) issues += issuesList.get(0);
+        else issues += issuesList.get(0);
 
         for (int position = 1; position < issuesList.size(); position++) issues += ", " + issuesList.get(position);
     }

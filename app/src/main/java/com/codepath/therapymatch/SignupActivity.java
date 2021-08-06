@@ -20,6 +20,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText etUsername;
     EditText etPassword;
     Button btnSignUp;
+    Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class SignupActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etSignUpUsername);
         etPassword = findViewById(R.id.etSignUpPassword);
         btnSignUp = findViewById(R.id.btnSignUp);
+        btnLogin = findViewById(R.id.btnLogin);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +40,14 @@ public class SignupActivity extends AppCompatActivity {
 
                 signUpUser(username, password);
 
+            }
+        });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -51,19 +61,17 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e == null){
-                    viewOtherUserPosts();
                     Toast.makeText(SignupActivity.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "Signup Success");
-                    return;
+                    editUserProfile();
                 }
                 Log.e(TAG, "Issue with signup: "+ e);
                 return;
             }
         });
-        viewOtherUserPosts();
     }
 
-    private void viewOtherUserPosts() {
+    private void editUserProfile() {
         Intent intent = new Intent(SignupActivity.this, PostsActivity.class);
         startActivity(intent);
         finish();

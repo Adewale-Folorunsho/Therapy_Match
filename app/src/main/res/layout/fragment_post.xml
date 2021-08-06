@@ -31,7 +31,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
-        android:backgroundTint="#FFFFFF"
+        android:backgroundTint="#FFCE38"
         android:clickable="true"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:src="@android:drawable/ic_menu_edit" />
