@@ -25,15 +25,15 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnMakePost"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         android:backgroundTint="#FFCE38"
         android:clickable="true"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:src="@android:drawable/ic_menu_edit" />
 
 </RelativeLayout>

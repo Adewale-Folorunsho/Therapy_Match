@@ -53,24 +53,23 @@
 
     <ImageView
         android:id="@+id/ivPicture"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnSubmit"
         android:layout_below="@+id/btnTakePicture"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="1dp"
         app:srcCompat="@drawable/make_post_image" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:clickable="true"
         android:backgroundTint="#FFFFFF"
+        android:clickable="true"
         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
 </RelativeLayout>

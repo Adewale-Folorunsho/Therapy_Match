@@ -104,8 +104,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
         ParseGeoPoint currentUserLocation = (ParseGeoPoint) currentUser.get("location");
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         query.setLimit(MAX_ITEMS);
-        // if(currentUserLocation != null) query.whereWithinMiles("location", currentUserLocation, MAX_DISTANCE);
-
+        if(currentUserLocation != null) query.whereWithinMiles("location", currentUserLocation, MAX_DISTANCE);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> usersFromDB, ParseException e) {
@@ -128,7 +127,7 @@ public class ViewOtherUserProfilesFragment extends Fragment{
                     }
                 }
 
-                    if(currentUser.get("issues") != null) sortUsersByIssues(users);
+                    if(currentUser.get("issues") != (null)) sortUsersByIssues(users);
                     FragmentAdapter fragmentAdapter = new FragmentAdapter(users, getContext());
                     swipeCardsView.setAdapter(fragmentAdapter);
             }

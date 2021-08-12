@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.codepath.therapymatch.LaunchActivity;
 import com.codepath.therapymatch.LoginActivity;
 import com.codepath.therapymatch.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -50,9 +49,10 @@ public class CurrentUserProfileFragment extends Fragment {
 
         tvProfileUsername = view.findViewById(R.id.tvNUProfileUsername);
         ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
+        btnLogout = view.findViewById(R.id.btnLogout);
+        fabEditProfile = view.findViewById(R.id.fabEditProfile);
 
         tvProfileUsername.setText(user.getUsername());
-
         ParseFile profilePicture = user.getParseFile("profileImage");
         Glide.with(CurrentUserProfileFragment.this)
                 .load(profilePicture.getUrl())
@@ -60,8 +60,6 @@ public class CurrentUserProfileFragment extends Fragment {
                 .placeholder(R.drawable.ic_baseline_cloud_download_24)
                 .into(ivProfilePicture);
 
-        btnLogout = view.findViewById(R.id.btnLogout);
-        fabEditProfile = view.findViewById(R.id.fabEditProfile);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,8 +75,6 @@ public class CurrentUserProfileFragment extends Fragment {
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
             }
         });
-
-
     }
 
     private void logout() {

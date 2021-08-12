@@ -76,8 +76,8 @@ public class FragmentAdapter extends BaseCardAdapter {
             tvDistance.setVisibility(View.GONE);
         }else{
             distance = distanceBetweenUsers(user);
-            if(distance > 1) tvDistance.setText(distance.toString() + " miles");
-            else tvDistance.setText(distance.toString() + " mile");
+            if(distance.equals(1)) tvDistance.setText(distance.toString() + " mile");
+            else tvDistance.setText(distance.toString() + " miles");
         }
     }
 

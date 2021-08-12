@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class PostFragment extends Fragment {
     private String TAG = "PostFragment";
     private int MAX_ITEMS = 20;
     private final int REQUEST_CODE = 20;
-    public List<Post> posts;
+    public List<Post> posts = new ArrayList<>();
     protected PostsAdapter postsAdapter;
     private SwipeRefreshLayout swipeContainer;
     FloatingActionButton btnMakePost;
@@ -96,14 +97,28 @@ public class PostFragment extends Fragment {
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> postsFromDB, ParseException e) {
-                if(e != null){
+                if(e != null) {
                     Log.e(TAG, "Error getting posts " + e);
                     return;
                 }
-
-                posts.addAll(postsFromDB);
+                checkInMatches(postsFromDB);
                 postsAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void checkInMatches(List<Post> postsFromDB) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        ArrayList<ParseUser> matches = (ArrayList<ParseUser>) currentUser.get("matches");
+        for (Post post: postsFromDB){
+            if(post.getUser().getObjectId().equals(currentUser.getObjectId())) posts.add(post);
+            if(matches != null) {
+                for (ParseUser match : matches) {
+                    if (post.getUser().getObjectId().equals(match.getObjectId())) {
+                        posts.add(post);
+                    }
+                }
+            }
+        }
     }
 }

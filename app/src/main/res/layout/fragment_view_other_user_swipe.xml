@@ -36,7 +36,6 @@
             android:textColor="#0B0B0B"
             android:textSize="34sp"
             android:textStyle="bold"
-            android:fontFamily="casual"
             tools:text="Name" />
 
         <TextView
@@ -51,6 +50,7 @@
             android:text="Bio"
             android:textColor="#0B0B0B"
             android:textSize="28sp"
+            android:fontFamily="casual"
             android:textStyle="bold" />
 
         <TextView
@@ -79,6 +79,7 @@
             android:textColor="#0B0B0B"
             android:textSize="28dp"
             android:textStyle="bold"
+            android:fontFamily="casual"
             android:visibility="gone" />
 
         <TextView

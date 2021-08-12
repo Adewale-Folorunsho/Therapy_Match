@@ -17,6 +17,9 @@ import com.codepath.therapymatch.fragments.CurrentUserProfileFragment;
 import com.codepath.therapymatch.fragments.PostFragment;
 import com.codepath.therapymatch.fragments.ViewOtherUserProfilesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 
@@ -24,14 +27,12 @@ public class PostsActivity extends AppCompatActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();
 
     public final static String TAG = "PostsActivity";
-    private GestureDetectorCompat mDetector;
     private BottomNavigationView bottomNavigationView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.posts_activity);
-
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -54,6 +55,7 @@ public class PostsActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView.setSelectedItemId(R.id.actionOtherUserProfile);
+
     }
 
     public interface MyOnTouchListener {
@@ -77,57 +79,5 @@ public class PostsActivity extends AppCompatActivity {
     public void unregisterMyOnTouchListener(MyOnTouchListener myOnTouchListener) {
         onTouchListeners.remove(myOnTouchListener) ;
     }
-//    public class MyGestureListener extends GestureDetector.SimpleOnGestureListener{
-//        private static final float SWIPE_THRESHOLD = 100;
-//        private static final float SWIPE_VELOCITY_THRESHOLD = 100;
-//
-//        @Override
-//        public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
-//            boolean result = false;
-//            float diffX = moveEvent.getX() - downEvent.getX();
-//            float diffY = moveEvent.getY() - downEvent.getY();
-//
-//            if (Math.abs(diffX) > Math.abs(diffY)) {
-//                //right or left swipe
-//                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-//                    if (diffX > 0) {
-//                        onSwipeRight();
-//                    } else {
-//                        onSwipeLeft();
-//                    }
-//                    result = true;
-//                }
-//            } else {
-//                //up or down swipe
-//                if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-//                    if (diffY > 0) {
-//                        onSwipeBottom();
-//                    } else {
-//                        onSwipeTop();
-//                    }
-//                    result = true;
-//                }
-//            }
-//            return result;
-//
-//        }
-//    }
-//
-//    private void onSwipeLeft() {
-//        Log.i("Swipe" , "left");
-//    }
-//
-//    private void onSwipeBottom() {
-//        Log.i("Swipe" , "bottom");
-//    }
-//
-//    private void onSwipeTop() {
-//        Log.i("Swipe" , "up");
-//    }
-//
-//    private void onSwipeRight() {
-//        Log.i("Swipe" , "right");
-//    }
-
 }
 
